@@ -1,0 +1,31 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body{
+  font-family: sans-serif;
+}
+main{
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(236, 234, 234);
+}
+main>section{
+  padding: 30px;
+  text-align: center;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: center;
+}
+main button{
+  padding: 5px 10px;
+  background-color: blue;
+  color: white;
+  border: none;
+}
