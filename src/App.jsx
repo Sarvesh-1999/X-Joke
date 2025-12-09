@@ -1,67 +1,56 @@
-import { useState } from "react";
-import "./App.css";
+import { useState } from 'react';
 
-const App = () => {
+function App() {
+
   const [joke, setJoke] = useState(null);
-  const [isError, setIsError] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [loading,setLoading] = useState(false);
 
-  async function getJoke() {
+   const fetchJoke = async () => {
+    setLoading(true)
+    setError(null);
+    setJoke(null);
+
     try {
-      setLoading(true);
-      setIsError(false);
-
-      const res = await fetch(
-        "https://official-joke-api.appspot.com/random_joke"
-      );
+      const res = await fetch("https://official-joke-api.appspot.com/random_joke");
+      if (!res.ok) {
+        throw new Error("Failed to fetch joke. Please try again.");
+      }
       const data = await res.json();
-
       setJoke(data);
-    } catch (error) {
-      setIsError(true);
-      setJoke({ message: "Could not fetch a joke. Try again" });
-    } finally {
+    } catch (err) {
+      setError("Could not fetch a joke. Try again.");
+    }finally{
       setLoading(false);
     }
-  }
+  };
 
   return (
-    <main>
-      <section>
-        <h1>Random Joke</h1>
-        <p>Click the button to fetch a fresh one</p>
+    <div className="App">
+     <h1>Random Joke</h1>
+     <p>Click the button to fetch a fresh one.</p>
+     <button onClick={fetchJoke} disabled={loading}>
+      {loading ? "Fetching…" : "Fetch joke"}
+      </button>
+     {error ? (
+      <>      
+       <p>{error}</p>
+       <button onClick={fetchJoke}>Try again</button>
+      </>
+    )
+    :
+    joke ? (
+    <>
+    <p>{joke.setup}</p>
+    <p>{joke.punchline}</p>
+    </>
+    ) 
+    :
+    <p>No joke yet.</p>
+    }
 
-      
-        <button onClick={getJoke} disabled={loading}>
-          {loading ? "Fetching..." : "Fetch joke"}
-        </button>
-
-        {isError ? (
-          <>
-            <p style={{ color: "red" }}>{joke?.message}</p>
-
-            <span
-              onClick={getJoke}
-              style={{
-                color: "blue",
-                textDecoration: "underline",
-                cursor: "pointer",
-              }}
-            >
-              Try again
-            </span>
-          </>
-        ) : joke ? (
-          <>
-            <p>{joke.setup}</p>
-            <strong>{joke.punchline}</strong>
-          </>
-        ) : (
-          <p>No joke yet</p>
-        )}
-      </section>
-    </main>
+    </div>
   );
-};
+}
 
 export default App;
