@@ -9,17 +9,19 @@ const App = () => {
   async function getJoke() {
     try {
       setLoading(true);
-      let res = await fetch(
+      setIsError(false);
+
+      const res = await fetch(
         "https://official-joke-api.appspot.com/random_joke"
       );
+      const data = await res.json();
 
-      let data = await res.json();
       setJoke(data);
-      setLoading(false);
     } catch (error) {
       setIsError(true);
-      setLoading(false);
       setJoke({ message: "Could not fetch a joke. Try again" });
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -28,14 +30,24 @@ const App = () => {
       <section>
         <h1>Random Joke</h1>
         <p>Click the button to fetch a fresh one</p>
-        <button onClick={getJoke}>
+
+      
+        <button onClick={getJoke} disabled={loading}>
           {loading ? "Fetching..." : "Fetch joke"}
         </button>
 
         {isError ? (
           <>
-            <p style={{ color: "red" }}>{joke.message}</p>
-            <span style={{ color: "blue", textDecoration: "underline" }}>
+            <p style={{ color: "red" }}>{joke?.message}</p>
+
+            <span
+              onClick={getJoke}
+              style={{
+                color: "blue",
+                textDecoration: "underline",
+                cursor: "pointer",
+              }}
+            >
               Try again
             </span>
           </>
@@ -45,9 +57,7 @@ const App = () => {
             <strong>{joke.punchline}</strong>
           </>
         ) : (
-          <>
-            <p>No joke yet</p>
-          </>
+          <p>No joke yet</p>
         )}
       </section>
     </main>
