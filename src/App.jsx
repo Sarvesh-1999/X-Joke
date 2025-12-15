@@ -29,7 +29,6 @@ function App() {
 
   return (
     <div className="App">
-      <section>
 
 <h1>Random Joke</h1>
       <p>Click the button to fetch a fresh one.</p>
@@ -50,7 +49,6 @@ function App() {
         <p>No joke yet.</p>
       )}
 
-      </section>
 
     </div>
   );
